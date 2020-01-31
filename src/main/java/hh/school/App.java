@@ -15,13 +15,6 @@ public class App
     private static HashMap<String, HashMap<Integer, ArrayList<Integer>>> index = new HashMap<String, HashMap<Integer, ArrayList<Integer>>>();
     private static HashMap<Integer, ArrayList<Integer>> inner = new HashMap<Integer, ArrayList<Integer>>();
 
-//    private static HashMap<String, HashMap<Integer, ArrayList<Integer>>> index;
-
-    public static void info(String args[]) {
-        System.out.println(System.getProperty("user.dir"));
-        System.out.println(String.join(",", args));
-    }
-
     public static List<String> splitStringToWords(String string) {
         List<String> words = new ArrayList<String>();
         StringBuilder word = new StringBuilder();
@@ -66,11 +59,11 @@ public class App
         }
     }
 
-    public static void doIndexing() {
-        String fileName = "vacancies.txt";
+    public static void doIndexing(String docs_filename) {
+
 //        fileName = (args.length > 0) ? "../" + fileName : fileName;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(docs_filename))) {
 
             String line;
             Integer doc_id = 1;
@@ -87,7 +80,7 @@ public class App
 
     public static void saveIndexIntoFile(String index_filename) {
         try {
-            FileWriter myWriter = new FileWriter("index.txt");
+            FileWriter myWriter = new FileWriter(index_filename);
 
             for (String word: index.keySet()) {
                 String line = word + ":" +
@@ -144,14 +137,31 @@ public class App
 
     public static void main(String args[]) {
 
-//        info(args);
+        if (args.length<3) {
+            System.out.println("Usage:");
+            System.out.println("Indexing: main.py -i index_file docs_file");
+            System.out.println("Searching: main.py -s index_file request");
+            System.exit(0);
+        }
 
-//        doIndexing();
+        System.out.println(args[0]);
 
-//        saveIndexIntoFile("");
+        if (args[0].equals("-i")) {
+            System.out.println("?");
+            String index_filename = args[1];
+            String docs_filename = args[2];
+            doIndexing(docs_filename);
+            saveIndexIntoFile(index_filename);
+        }
 
-        loadIndexFromFile("index.txt");
+        if (args[0] == "-s") {
+            String index_filename = args[1];
+            String request = args[2];
+            loadIndexFromFile(index_filename);
+            System.out.println(index.getOrDefault(request, inner));
 
-//        System.out.println(index.get("drupal"));
+        }
+
+
     }
 }
