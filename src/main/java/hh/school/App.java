@@ -93,7 +93,7 @@ public class App
                                         .collect(Collectors.joining(",")))
                                 .collect(Collectors.joining(";"));
 
-                myWriter.write(line+"\n");
+                myWriter.write(line+"\r\n");
             }
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
@@ -144,21 +144,18 @@ public class App
             System.exit(0);
         }
 
-        System.out.println(args[0]);
-
         if (args[0].equals("-i")) {
-            System.out.println("?");
             String index_filename = args[1];
             String docs_filename = args[2];
             doIndexing(docs_filename);
             saveIndexIntoFile(index_filename);
         }
 
-        if (args[0] == "-s") {
+        if (args[0].equals("-s")) {
             String index_filename = args[1];
             String request = args[2];
             loadIndexFromFile(index_filename);
-            System.out.println(index.getOrDefault(request, inner));
+            System.out.println(index.getOrDefault(request, inner).keySet());
 
         }
 
