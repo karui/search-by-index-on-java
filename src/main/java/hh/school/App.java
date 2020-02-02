@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.*;
-
 public class App
 {
     private static HashMap<String, HashMap<Integer, ArrayList<Integer>>> index = new HashMap<String, HashMap<Integer, ArrayList<Integer>>>();
@@ -61,8 +59,6 @@ public class App
 
     public static void doIndexing(String docs_filename) {
 
-//        fileName = (args.length > 0) ? "../" + fileName : fileName;
-
         try (BufferedReader br = new BufferedReader(new FileReader(docs_filename))) {
 
             String line;
@@ -96,7 +92,6 @@ public class App
                 myWriter.write(line+"\r\n");
             }
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -136,29 +131,32 @@ public class App
 
 
     public static void main(String args[]) {
-
+        System.setProperty("file.encoding" , "UTF-8");
         if (args.length<3) {
             System.out.println("Usage:");
             System.out.println("Indexing: main.py -i index_file docs_file");
             System.out.println("Searching: main.py -s index_file request");
+
             System.exit(0);
         }
 
         if (args[0].equals("-i")) {
+            System.out.print("Индексация... ");
             String index_filename = args[1];
             String docs_filename = args[2];
             doIndexing(docs_filename);
             saveIndexIntoFile(index_filename);
+            System.out.println("ок.");
         }
 
         if (args[0].equals("-s")) {
+            System.out.println("Поиск... ");
             String index_filename = args[1];
             String request = args[2];
             loadIndexFromFile(index_filename);
+            System.out.print(request+":");
             System.out.println(index.getOrDefault(request, inner).keySet());
-
         }
-
 
     }
 }
